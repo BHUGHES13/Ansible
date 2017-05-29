@@ -1,3 +1,3 @@
 # Ansible
 
-A base repository for practice ansible projects
+A base repository for ansible practice projects
