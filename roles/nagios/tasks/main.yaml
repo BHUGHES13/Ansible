@@ -1,0 +1,27 @@
+---
+- name: Install prereqs for nagios
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ pkgtoinstall }}"
+ 
+- name: Download nagios source
+  get_url:
+    url: https://github.com/NagiosEnterprises/nagioscore/archive/nagios-4.3.2.tar.gz
+    dest: /tmp/nagios-4.3.2.tar.gz
+    mode: 0644
+
+- name: Extract and compile nagios source
+  shell: "cd /tmp; tar xzf nagios-4.3.2.tar.gz; cd /tmp/nagioscore-nagios-4.3.2; ./configure --with-httpd-conf=/etc/apache2/sites-enabled; make all;"
+
+- name: Add nagios user
+  shell: "useradd nagios; usermod -a -G nagios www-data;"
+
+- name: Install binaries, service and deamon
+  shell: "cd /tmp/nagioscore-nagios-4.3.2; make install; make install-init; update-rc.d nagios defaults; make install-commandmode; make install-config; make install-webconf; a2enmod rewrite; a2enmod cgi; ufw allow Apache; ufw reload;"
+
+- name: Create nagios admin
+  shell: "htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin"
+  notify:
+    - restart apache
+    - restart nagios

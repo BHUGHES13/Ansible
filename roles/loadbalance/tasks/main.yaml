@@ -1,0 +1,34 @@
+--- # This is a test build for ansible deploying a loadbalancer (nginx) on linux nodes
+- name: Install nginx package on Debian 
+  when: (ansible_distribution == "Debian")
+  apt:
+    name: nginx
+    state: latest
+- name: Install nginx package on Centos based systems
+  when: (ansible_distribution == "CentOS")
+  yum:
+    name: nginx
+    state: latest
+- name: Set firewall
+  firewalld:
+    service: http
+    permanent: true
+    state: enabled
+- name: Build config
+  copy:
+    src: ~/builds/files/nginx.conf
+    dest: /etc/nginx/
+    owner: root
+    group: root
+    mode: 0544
+    force: yes
+  notify:
+  - Restart nginx 
+- name: Enable nginx
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+- name: disable iptables (temp)
+  shell: "iptables --flush"
+

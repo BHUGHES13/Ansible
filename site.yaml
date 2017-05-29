@@ -1,0 +1,20 @@
+---
+#- hosts: webservers, phpmanservers
+#  remote_user: ansible
+#  become: yes
+#  become_method: sudo
+#  roles:
+#  - web
+#- hosts: loadservers
+#  remote_user: ansible
+#  become: yes
+#  become_method: sudo
+#  roles:
+#  - loadbalance
+- hosts: dbservers
+  remote_user: ansible
+  become: yes
+  become_method: sudo
+  roles:
+  - nagios
+

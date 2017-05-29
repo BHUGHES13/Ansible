@@ -1,0 +1,37 @@
+--- #The webserver for the loadbalancer servers
+  - name: Install httpd on Red Hat based systems
+    when: (ansible_os_family == "RedHat")
+    yum:
+      name: httpd
+      state: latest
+  - name: Install php packages on Red Hat based systems
+    when: (ansible_os_family == "RedHat")
+    yum:
+      name: php
+      state: latest
+  - name: Install apache on Debain based systems
+    when: (ansible_os_family == "Debian")
+    apt:
+      name: apache2
+      state: latest
+  - name: Install php on Debian based systems
+    when: (ansible_os_family == "Debian")    
+    apt:
+      name: php
+      state: latest
+#  - name: Set firewall to allow http (port 80)
+#    firewalld:
+#      service: http
+#      permanent: true
+#      state: enabled
+  - name: Move website files to html dir
+    copy:
+      src: ~/builds/files/html/index.html
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: 0544
+#    notify: "restart webserver"
+  - name: Disbale iptables (temp)
+    shell: "iptables --flush"
+

@@ -1,0 +1,4 @@
+---
+pkg_debian: [ 'apache2', 'php' ]
+
+pkg_redhat: [ 'httpd', 'php' ]

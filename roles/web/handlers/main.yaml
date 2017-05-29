@@ -1,0 +1,13 @@
+---
+- name: restart webserver on apache
+  service:
+    name: apache2
+    state: restarted
+
+
+- name: restart webserver on httpd
+  service:
+    name: httpd
+    state: restarted
+    when: ansible_os_family == "RedHat"
+    listen: "restart webserver"
